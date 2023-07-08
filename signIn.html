@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup</title>
+    <link rel="stylesheet" href="signUp.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+       <div class="outer-box">
+        <div class="inner-box">
+            <header class="signup-header">
+                <h1>Sign In</h1>
+                <p>Welcome back !</p>
+            </header>
+            <main class="signup-body">
+                <form id="form">
+                    <p>
+                        <label for="email">Email</label>
+                        <input type="email" id="email" placeholder="Email" required>
+                    </p>
+                    <p>
+                        <label for="fullname">Password</label>
+                        <input type="password" id="password" placeholder="Password" required>
+                    </p>
+                    <p>
+                        <input type="submit" id="submit" value="Log In">
+                    </p>
+                    <p id="wrongPassword"></p>
+                </form>
+            </main>
+            <footer class="signup-footer">
+                <p>No Account? We got you ! &nbsp; <a href="./signUp.html">Sign Up</a></p>
+             </footer>
+        </div>
+        <div class="circle c1"></div>
+        <div class="circle c2"></div>
+       </div>
+</body>
+<script>
+    document.getElementById('form').addEventListener('submit', logIn);
+    async function logIn(e) {
+        e.preventDefault();
+        try {
+            let email = document.getElementById('email').value;
+            let password = document.getElementById('password').value;
+            let wrongPassword = document.getElementById('wrongPassword');
+
+            const conFig = {
+                method: "POST",
+                url: "http://localhost:3000/user/logIn",
+                data: {
+                    'email': email,
+                    'password': password
+                }
+            }
+            const searchUser = await axios(conFig);
+            if( searchUser ) {
+                wrongPassword.innerHTML = "Logged in Successfully";
+                wrongPassword.style.color = 'green';
+            }
+        } catch (err) {
+            if (err.response.status == 404) {
+                wrongPassword.innerHTML = "User not found";
+                wrongPassword.style.color = 'red';
+            } else if (err.response.status == 401) {
+                wrongPassword.innerHTML = "Password is wrong";
+                wrongPassword.style.color = 'red';
+            } else {
+                wrongPassword.innerHTML = "Something went wrong";
+                wrongPassword.style.color = 'red';
+            }
+        }
+    } 
+</script>
+</html>
