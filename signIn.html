@@ -59,6 +59,7 @@
             if( searchUser ) {
                 wrongPassword.innerHTML = "Logged in Successfully";
                 wrongPassword.style.color = 'green';
+                window.location.href = "./expenses.html";
             }
         } catch (err) {
             if (err.response.status == 404) {
