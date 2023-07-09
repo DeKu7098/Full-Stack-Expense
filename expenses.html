@@ -1,60 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
-</head>
 <body>
-    <!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Expense</title>
+      <link rel="stylesheet" href="expenses.css" />
+      <script src="https://cdn.jsdelivr.net/npm/axios@1.1.2/dist/axios.min.js"></script>
+    </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
-  <link rel="stylesheet" href="expenses.css">
-</head>
-
-<body>
-  <form id="addForm">
-    <div class="login-box">
+    <body>
+      <form id="addForm">
+        <div class="login-box">
+          <div class="login-header">
+            <header>Add All Your Expenses Here.</header>
+          </div>
+          <div class="input-box">
+            <input
+              type="number"
+              class="input-field"
+              placeholder="Enter Your Expense Amount."
+              autocomplete="off"
+              required
+              id="amt"
+            />
+          </div>
+          <div class="input-box">
+            <input
+              type="text"
+              class="input-field"
+              placeholder="Enter Your Product Description."
+              autocomplete="off"
+              required
+              id="desc"
+            />
+          </div>
+          <div class="input-box">
+            <select id="catg" class="input-field" required>
+              <option value="">Select</option>
+              <option value="Fuel">Fuel</option>
+              <option value="Food">Food</option>
+              <option value="Movie">Movie</option>
+              <option value="Grocery">Grocery</option>
+              <option value="Electricity">Electricity</option>
+              <option value="Electricals">Electricals</option>
+              <option value="Others.">Others.</option>
+            </select>
+          </div>
+          <div class="input-submit">
+            <input type="submit" class="submit-btn" id="submit" />
+            <label for="submit">Submit</label>
+          </div>
+        </div>
+      </form>
       <div class="login-header">
-        <header>Add All Your Expenses Here.</header>
+        <header id="exp"></header>
       </div>
-      <div class="input-box">
-        <input type="number" class="input-field" placeholder="Enter Your Expense Amount." autocomplete="off" required
-          id="amt">
-      </div>
-      <div class="input-box">
-        <input type="text" class="input-field" placeholder="Enter Your Product Discription." autocomplete="off" required
-          id="desc">
-      </div>
-      <div class="input-box">
-        <select id="catg" class="input-field" required>
-          <option value="">Select</option>
-          <option value="Fuel">Fuel</option>
-          <option value="Food">Food</option>
-          <option value="Movie">Movie</option>
-          <option value="Grocery">Grocery</option>
-          <option value="Electricity">Electricity</option>
-          <option value="Electricals">Electricals</option>
-          <option value="Others.">Others.</option>
-        </select>
-      </div>
-      <div class="input-submit">
-        <input type="submit" class="submit-btn" id="submit" />
-        <label for="submit">Submit</label>
-      </div>
-    </div>
-  </form>
-  <div class="login-header">
-    <header id="exp"></header>
-  </div>
-  <table class="styled-table" id="styled-table">
-    <!-- <thead>
+      <table class="styled-table" id="styled-table">
+        <!-- <thead>
       <tr>
         <th>Sl.no</th>
         <th>Amount</th>
@@ -63,8 +67,8 @@
         <th>Delete</th>
       </tr>
     </thead> -->
-    <tbody class="boxx" id="boxx">
-      <!-- <tr>
+        <tbody class="boxx" id="boxx">
+          <!-- <tr>
         <td>Dom</td>
         <td>6000</td>
         <td>6000</td>
@@ -75,119 +79,131 @@
         <td>5150</td>
         <td>6000</td>
       </tr> -->
-    </tbody>
-  </table>
-</body>
-<script>
-     var box = document.querySelector("#boxx");
-     var thead = document.createElement('thead');
-     var expdet = document.getElementById('exp');
-     var tablee = document.querySelector('#styled-table')
-    document.getElementById("addForm").addEventListener('submit', addExpense);
-    async function addExpense(e) {
+        </tbody>
+      </table>
+    </body>
+    <script>
+      var box = document.querySelector("#boxx");
+      var thead = document.createElement("thead");
+      var expdet = document.getElementById("exp");
+      var tablee = document.querySelector("#styled-table");
+      document.getElementById("addForm").addEventListener("submit", addExpense);
+
+      window.addEventListener("DOMContentLoaded", () => {
+        pageLoader();
+      });
+      async function pageLoader() {
+        const token = localStorage.getItem('token');
+        const data = await axios.get(
+          "http://localhost:3000/expense/get-expenses",
+          { headers: { "Authorization" : token }}
+        );
+        const res = data.data.expenses;
+        console.log(data);
+        // console.log(data)
+
+        var count = 0;
+        for (let i = 0; i < res.length; i++) {
+          count++;
+          if (count == 1) {
+            expdet.innerHTML = "Here is all your expenses";
+            var tr0 = document.createElement("tr");
+            var th0 = document.createElement("th");
+            th0.innerHTML = "Srl.no";
+            var th1 = document.createElement("th");
+            th1.innerHTML = "Amount";
+            var th2 = document.createElement("th");
+            th2.innerHTML = "Description";
+            var th3 = document.createElement("th");
+            th3.innerHTML = "Category";
+            var th4 = document.createElement("th");
+            th4.innerHTML = "Button";
+            thead.className = "thead";
+            tablee.appendChild(thead);
+            thead.appendChild(tr0);
+            tr0.appendChild(th0);
+            tr0.appendChild(th1);
+            tr0.appendChild(th2);
+            tr0.appendChild(th3);
+            tr0.appendChild(th4);
+          }
+          var tr = document.createElement("tr");
+          var td0 = document.createElement("td");
+          var td1 = document.createElement("td");
+          var td2 = document.createElement("td");
+          var td3 = document.createElement("td");
+          var delbtn = document.createElement("input");
+          var idstore = document.createElement("input");
+          delbtn.type = "button";
+          delbtn.value = "Delete";
+          delbtn.className = "delete-btn";
+          idstore.value = res[i].id;
+          idstore.type = "hidden";
+          td0.innerHTML = count;
+          td1.innerHTML = res[i].expense;
+          //   console.log(td1.innerHTML)
+          td2.innerHTML = res[i].desc;
+          td3.innerHTML = res[i].catg;
+          if (count % 2 == 0) {
+            tr.className = "active-row";
+          }
+          box.appendChild(tr);
+          tr.appendChild(idstore);
+          tr.appendChild(td0);
+          tr.appendChild(td1);
+          tr.appendChild(td2);
+          tr.appendChild(td3);
+          tr.appendChild(delbtn);
+          delbtn.addEventListener("click", del);
+        }
+      }
+
+      async function addExpense(e) {
         e.preventDefault();
+        let token = localStorage.getItem('token');
         let expense = document.getElementById("amt").value;
         let desc = document.getElementById("desc").value;
         let catg = document.getElementById("catg").value;
         // console.log(expense)
 
         const conFig = {
-            method: "POST",
-            url: "http://localhost:3000/expense/add-expenses",
-            data: {
-                expense: expense,
-                desc: desc,
-                catg: catg
-            }
-        }
-        await axios(conFig).then(() => {
-            console.log("added")
-        }).catch((err) => {
-            console.log(err);
-        })
-        // console.log(conFig);
-        // expdet.innerHTML = "";
-        // tablee.innerHTML = "";
-        // box.innerHTML = "";
-        await pageLoader();
-    }
-  window.addEventListener('DOMContentLoaded', () => {
-    pageLoader();
-  })
-  async function pageLoader() {
-    const data = await axios.get("http://localhost:3000/expense/get-expenses");
-    const res = data.data.expenses;
-    console.log(res);
-    // console.log(data)
-    
-    var count = 0;
-    for(let i = 0; i<res.length; i++){
-      count++;
-      if (count == 1) {
-        expdet.innerHTML = "Here is all your expenses"
-        var tr0 = document.createElement('tr');
-        var th0 = document.createElement('th');
-        th0.innerHTML = "Srl.no"
-        var th1 = document.createElement('th');
-        th1.innerHTML = "Amount"
-        var th2 = document.createElement('th');
-        th2.innerHTML = "Description"
-        var th3 = document.createElement('th');
-        th3.innerHTML = "Category"
-        var th4 = document.createElement('th');
-        th4.innerHTML = "Button"
-        thead.className = "thead"
-        tablee.appendChild(thead);
-        thead.appendChild(tr0);
-        tr0.appendChild(th0);
-        tr0.appendChild(th1);
-        tr0.appendChild(th2);
-        tr0.appendChild(th3);
-        tr0.appendChild(th4);
-      }
-      var tr = document.createElement('tr');
-      var td0 = document.createElement('td');
-      var td1 = document.createElement('td');
-      var td2 = document.createElement('td');
-      var td3 = document.createElement('td');
-      var delbtn = document.createElement('input');
-      var idstore = document.createElement('input');
-      delbtn.type = 'button'
-      delbtn.value = "Delete"
-      delbtn.className = "delete-btn"
-      idstore.value = res[i].id
-      idstore.type = 'hidden'
-      td0.innerHTML = count;
-      td1.innerHTML= res[i].expense;
-    //   console.log(td1.innerHTML)
-      td2.innerHTML = res[i].desc;
-      td3.innerHTML = res[i].catg;
-      if (count % 2 == 0) {
-        tr.className = "active-row"
-      }
-      box.appendChild(tr);
-      tr.appendChild(idstore);
-      tr.appendChild(td0);
-      tr.appendChild(td1);
-      tr.appendChild(td2);
-      tr.appendChild(td3);
-      tr.appendChild(delbtn);
-      delbtn.addEventListener('click', delf);
-    };
-  }
+          method: "POST",
+          url: "http://localhost:3000/expense/add-expenses",
+          data: {
+            expense: expense,
+            desc: desc,
+            catg: catg,
 
-  async function delf(e) {
-    let par = e.target.parentElement;
-    let fc = par.firstChild;
-    let id = fc.value;
-    console.log(id)
-    // const config = {
-    //   method: 'DELETE',
-    //   url: 'http://localhost:3000/expense/delete-expense/' + id
-    // }
-    // const ans = await axios(config);
-    await axios.delete(`http://localhost:3000/expense/delete-expense/${id}`);
-    await pageLoader();
-  }
-</script>
-</html>
+          },
+          headers:{ "Authorization" : token }
+        };
+        await axios(conFig)
+          .then(() => {
+            console.log("added");
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+        // console.log(conFig);
+        expdet.innerHTML = "";
+        thead.innerHTML = "";
+        box.innerHTML = "";
+        await pageLoader();
+      }
+
+      async function del(e) {
+        let token = localStorage.getItem('token');
+        let par = e.target.parentElement;
+        let fc = par.firstChild;
+        let id = fc.value;
+        const d = await axios.delete(
+          `http://localhost:3000/expense/delete-expense/${id}`, {headers:{ "Authorization" : token }}
+        );
+        expdet.innerHTML = "";
+        thead.innerHTML = "";
+        box.innerHTML = "";
+        await pageLoader();
+      }
+    </script>
+  </html>
+</body>

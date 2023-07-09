@@ -57,8 +57,11 @@
             }
             const searchUser = await axios(conFig);
             if( searchUser ) {
+                
                 wrongPassword.innerHTML = "Logged in Successfully";
                 wrongPassword.style.color = 'green';
+                localStorage.setItem('token', searchUser.data.token);
+                // console.log(searchUser.data.token)
                 window.location.href = "./expenses.html";
             }
         } catch (err) {
