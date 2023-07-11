@@ -84,12 +84,45 @@
       </tr> -->
         </tbody>
       </table>
+      <div class="login-header">
+        <header id="leadhead"></header>
+      </div>
+  
+      <table class="styled-table" id="styled-table2">
+        <!-- <thead>
+         <tr>
+           <th>Sl.no</th>
+           <th>Amount</th>
+           <th>Description</th>
+           <th>Food</th>
+           <th>Delete</th>
+         </tr>
+       </thead> -->
+        <tbody class="boxx" id="boxx2">
+          <!-- <tr>
+           <td>Dom</td>
+           <td>6000</td>
+           <td>6000</td>
+           <td><input type="button" value="Delete" class="delete-btn"></td>
+         </tr>
+         <tr class="active-row">
+           <td>Melissa</td>
+           <td>5150</td>
+           <td>6000</td>
+         </tr> -->
+        </tbody>
+      </table>
     </body>
     <script>
       var box = document.querySelector("#boxx");
+      var box2 = document.querySelector("#boxx2");
       var thead = document.createElement("thead");
+      var thead2 = document.createElement('thead');
       var expdet = document.getElementById("exp");
       var tablee = document.querySelector("#styled-table");
+      var leadheadhead = document.getElementById('leadhead');
+      var tableee = document.querySelector('#styled-table2');
+
       const boax = document.getElementById('buydiv');
       document.getElementById("addForm").addEventListener("submit", addExpense);
 
@@ -133,7 +166,13 @@
     butt.id = "premium_message";
     butt.innerHTML = 'You are a premium user';
     butt.style.color = 'green';
+    const butt2 = document.createElement('button');
+    butt2.id = 'show_leader';
+    butt2.innerHTML = 'Show leaderboard';
+    butt2.className = "buypre-btn";
     boax.appendChild(butt);
+    boax.appendChild(butt2);
+    document.getElementById('show_leader').addEventListener('click', showLeaderBoard);
   }
         //
         var count = 0;
@@ -242,32 +281,6 @@
         await pageLoader();
       }
 
-      // document.getElementById("rzp-button1").onclick = async function(e) {
-      //   const token = localStorage.getItem('token');
-      //   const response = await axios.get('http://localhost:3000/purchase/premiummembership', {headers:{ "Authorization" : token }});
-       
-      //   var options = {
-      //     "key": response.data.key_id,
-      //     "order_id":response.data.order.id,
-      //     "handler": async function (response) {
-      //       await axios.post('http://localhost:3000/purchase/updatetransactionstatus', {
-      //         order_id: options.order_id,
-      //         payment_id: response.razorpay_payement_id,
-      //       }, {headers:{ "Authorization" : token }})
-
-      //       alert('You are a premium user now')
-      //     },
-      //   };
-      //   const rzp1 = new Razorpay(options);
-      //   rzp1.open();
-      //   e.preventDefault();
-
-      //   rzp1.on('payemnt.failed', function (response){
-      //     console.log(response);
-      //     alert('Something went wrong');
-      //   })
-      // }
-
       async function buyPremium () {
         const token = localStorage.getItem('token');
         const response = await axios.get('http://localhost:3000/purchase/premiummembership', {headers:{ "Authorization" : token }});
@@ -292,6 +305,54 @@
         })
       //  await pageLoader();
       }
+      
+      async function showLeaderBoard() {
+    const token = localStorage.getItem('token');
+    const data = await axios.get("http://localhost:3000/premium/showleaderboard", { headers: { 'Authorization': token } })
+    // console.log(data)
+    var count = 0;
+    var show_leader1 = document.getElementById("show_leader")
+    if (show_leader1.innerHTML == "Hide Leaderboard") {
+      show_leader1.innerHTML = "Show Leaderboard"
+      leadheadhead.innerHTML = ""
+      thead2.innerHTML = ""
+      box2.innerHTML = ""
+      return;
+    }
+    data.data.user.forEach((element) => {
+      count++;
+      if (count == 1) {
+        leadheadhead.innerHTML = "Here is the Leaderboard"
+        var tr0 = document.createElement('tr');
+        var th0 = document.createElement('th');
+        th0.innerHTML = "Srl.no"
+        var th1 = document.createElement('th');
+        th1.innerHTML = "Name"
+        var th2 = document.createElement('th');
+        th2.innerHTML = "Total Expenses"
+        tableee.appendChild(thead2);
+        thead2.appendChild(tr0);
+        tr0.appendChild(th0);
+        tr0.appendChild(th1);
+        tr0.appendChild(th2);
+      }
+      var tr = document.createElement('tr');
+      var td0 = document.createElement('td');
+      var td1 = document.createElement('td');
+      var td2 = document.createElement('td');
+      td0.innerHTML = count;
+      td1.innerHTML = element.name;
+      td2.innerHTML = element.total_exp;
+      if (count % 2 == 0) {
+        tr.className = "active-row"
+      }
+      box2.appendChild(tr);
+      tr.appendChild(td0);
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      show_leader1.innerHTML = "Hide Leaderboard"
+    });
+  }
    
     </script>
   </html>
